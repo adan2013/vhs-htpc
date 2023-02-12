@@ -254,11 +254,11 @@ void switchMode(Modes mode) {
 void autoSwitchMode() {
   int timeout = 0;
   switch (currentMode) {
-    case INIT_TEST: timeout = 1500; break;
+    case INIT_TEST: timeout = 2000; break;
     case TRIGGERING_PC_1:
     case TRIGGERING_PC_2:
     case TRIGGERING_PC_3:
-      timeout = 150;
+      timeout = 200;
       break;
     case PC_TRIGGERED: timeout = pcIsOn ? 800 : 2200; break;
     case ON_MSG: timeout = 3000; break;
@@ -309,7 +309,7 @@ void onVolumeButtonsClick(int diff) {
 
 void monitorPcState() {
   pcIsOn = analogRead(pcStatePin) < VOLTAGE_THRESHOLD;
-  if(pcIsOn != lastPcState) switchMode(pcIsOn ? ON_MSG : OFF_MSG);
+  if(pcIsOn != lastPcState && currentMode == CLOCK) switchMode(pcIsOn ? ON_MSG : OFF_MSG);
   lastPcState = pcIsOn;
   if(pcTriggerReleaseTime > 0 && millis() > pcTriggerReleaseTime) {
     pcTriggerReleaseTime = 0;
@@ -332,7 +332,7 @@ void readIrCodes() {
           }
           break;
         case IR_02_POWER: // on/off the pc
-          if(pcTriggerReleaseTime == 0) {
+          if(currentMode == CLOCK) {
             reverseStartAnimation = false;
             switchMode(TRIGGERING_PC_1);
           }

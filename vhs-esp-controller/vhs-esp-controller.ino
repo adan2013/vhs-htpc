@@ -83,6 +83,26 @@ enum IrCodes {
   IR_20_DTSDIALOG = 0x6C116
 };
 
+enum PcCommands {
+  CMD_PROFILE = 1,
+  CMD_FULLS = 2,
+  CMD_RELOAD = 3,
+  CMD_MUTE = 4,
+  CMD_PLAY = 5,
+  CMD_UP = 6,
+  CMD_DN = 7,
+  CMD_PASTE = 8,
+  CMD_ENTER = 9,
+  CMD_S1 = 10,
+  CMD_S2 = 11,
+  CMD_S3 = 12,
+  CMD_S4 = 13,
+  CMD_S5 = 14,
+  CMD_S6 = 15,
+  CMD_CLEAR = 16,
+  CMD_APPS = 17
+};
+
 enum Modes {
   INIT_TEST,
   MAIN_CLOCK,
@@ -345,9 +365,13 @@ void autoSwitchMode() {
   }
 }
 
+void sendCommand(PcCommands cmd) {
+  Serial.println(cmd, DEC);
+}
+
 void onVolumeButtonsClick(int diff) {
   if(currentMode != SET_HOURS && currentMode != SET_MINUTES) {
-    // send volume level to the pc
+    sendCommand(diff > 0 ? CMD_UP : CMD_DN);
   }else{
     if(currentMode == SET_HOURS) {
       hours += diff;
@@ -381,7 +405,6 @@ void readIrCodes() {
   if (irRecv.decode(&results)) {
     if(lastCodeReceivedTime == 0) {
       bool codeIsCorrect = true;
-      serialPrintUint64(results.value, HEX);
       switch(results.value) {
         case IR_01_INPUT: // clock setup
           switch(currentMode) {
@@ -396,6 +419,9 @@ void readIrCodes() {
             switchMode(TRIGGERING_PC_1);
           }
           break;
+        case IR_03_VERTICAL: // profile switch
+          sendCommand(CMD_PROFILE);
+          break;
         case IR_04_CINEMA: // display modes
           if(currentMode == SET_DISPLAY) {
             switch(currentDisplayMode) {
@@ -406,11 +432,53 @@ void readIrCodes() {
           }
           switchMode(SET_DISPLAY);
           break;
-        case IR_09_VOLUP: // VOL+ or value up
+        case IR_05_AUTOSOUND: // full screen
+          sendCommand(CMD_FULLS);
+          break;
+        case IR_06_MUSIC: // reload view
+          sendCommand(CMD_RELOAD);
+          break;
+        case IR_07_VOICE: // mute sound
+          sendCommand(CMD_MUTE);
+          break;
+        case IR_08_NIGHT: // play/pause track
+          sendCommand(CMD_PLAY);
+          break;
+        case IR_09_VOLUP: // volume/value up
           onVolumeButtonsClick(1);
           break;
-        case IR_10_VOLDN: // VOL- or value dn
+        case IR_10_VOLDN: // volume/value down
           onVolumeButtonsClick(-1);
+          break;
+        case IR_11_BASS: // paste from clipboard
+          sendCommand(CMD_PASTE);
+          break;
+        case IR_12_MUTE: // enter/select
+          sendCommand(CMD_ENTER);
+          break;
+        case IR_13_INDICATORS: // slot 1
+          sendCommand(CMD_S1);
+          break;
+        case IR_14_AUDIO: // slot 2
+          sendCommand(CMD_S2);
+          break;
+        case IR_15_GAME: // slot 3
+          sendCommand(CMD_S3);
+          break;
+        case IR_16_NEWS: // slot 4
+          sendCommand(CMD_S4);
+          break;
+        case IR_17_SPORTS: // slot 5
+          sendCommand(CMD_S5);
+          break;
+        case IR_18_STANDARD: // slot 6
+          sendCommand(CMD_S6);
+          break;
+        case IR_19_AVSYNC: // clear text field
+          sendCommand(CMD_CLEAR);
+          break;
+        case IR_20_DTSDIALOG: // apps menu
+          sendCommand(CMD_APPS);
           break;
         default:
           codeIsCorrect = false;

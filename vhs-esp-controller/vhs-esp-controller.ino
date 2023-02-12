@@ -100,6 +100,7 @@ enum Modes {
 };
 
 bool reverseStartAnimation = false;
+int cpuTemp = 0;
 bool pcIsOn = false;
 bool lastPcState = false;
 unsigned long pcTriggerReleaseTime = 0;
@@ -204,17 +205,24 @@ void switchMode(Modes mode) {
       turnOnAllSegments();
       break;
     case MAIN_CLOCK:
-      displayNumber(0, hours / 10);
-      displayNumber(1, hours % 10);
-      displayNumber(2, minutes / 10);
-      displayNumber(3, minutes % 10);
-      turnOnColon();
-      break;
     case MAIN_TEMP:
-      displaySymbol(0, DASH);
-      displaySymbol(1, DASH);
-      displaySymbol(2, DEG);
-      displaySymbol(3, LETTER_C);
+      if (currentMode == MAIN_TEMP && pcIsOn) {
+        if (cpuTemp > 0) {
+          displayNumber(0, cpuTemp / 10);
+          displayNumber(1, cpuTemp % 10);
+        } else {
+          displaySymbol(0, DASH);
+          displaySymbol(1, DASH);
+        }
+        displaySymbol(2, DEG);
+        displaySymbol(3, LETTER_C);
+      } else {
+        displayNumber(0, hours / 10);
+        displayNumber(1, hours % 10);
+        displayNumber(2, minutes / 10);
+        displayNumber(3, minutes % 10);
+        turnOnColon();
+      }
       break;
     case MAIN_SOFF:
       turnOffScreen();
@@ -358,7 +366,10 @@ void onVolumeButtonsClick(int diff) {
 
 void monitorPcState() {
   pcIsOn = analogRead(pcStatePin) < VOLTAGE_THRESHOLD;
-  if(pcIsOn != lastPcState && isOnMainScreen()) switchMode(pcIsOn ? ON_MSG : OFF_MSG);
+  if (pcIsOn != lastPcState) {
+    cpuTemp = 0;
+    if (isOnMainScreen()) switchMode(pcIsOn ? ON_MSG : OFF_MSG);
+  }
   lastPcState = pcIsOn;
   if(pcTriggerReleaseTime > 0 && millis() > pcTriggerReleaseTime) {
     pcTriggerReleaseTime = 0;
@@ -415,7 +426,7 @@ void updateTimeOnScreen() {
   hours = now.hour();
   minutes = now.minute();
   nextClockRefreshTime = millis() + (61 - now.second()) * 1000;
-  if(currentMode == MAIN_CLOCK) {
+  if(currentMode == MAIN_CLOCK || (currentMode == MAIN_TEMP && !pcIsOn)) {
     displayNumber(0, hours / 10);
     displayNumber(1, hours % 10);
     displayNumber(2, minutes / 10);

@@ -41,15 +41,22 @@ enum Symbols {
   NUM_8 = B10000000,
   NUM_9 = B10000100,
   EMPTY = B11111111,
-  DASH = B11111110,
-  ONE_LINE = B11110111,
-  TWO_LINE = B11110110,
+  DASH  = B11111110,
+  DEG   = B10011100,
+  ONE_LINE   = B11110111,
+  TWO_LINE   = B11110110,
   THREE_LINE = B10110110,
-  LETTER_E = B10110000,
-  LETTER_F = B10111000,
-  LETTER_N = B11101010,
-  LETTER_R = B11111010,
-  LETTER_O = B10000001
+  LETTER_C   = B10110001,
+  LETTER_E   = B10110000,
+  LETTER_F   = B10111000,
+  LETTER_I   = B11111001,
+  LETTER_M   = B10001001,
+  LETTER_N   = B11101010,
+  LETTER_O   = B10000001,
+  LETTER_P   = B10011000,
+  LETTER_R   = B11111010,
+  LETTER_S   = B10100100,
+  LETTER_T   = B11110000
 };
 
 enum IrCodes {
@@ -78,7 +85,9 @@ enum IrCodes {
 
 enum Modes {
   INIT_TEST,
-  CLOCK,
+  MAIN_CLOCK,
+  MAIN_TEMP,
+  MAIN_SOFF,
   TRIGGERING_PC_1,
   TRIGGERING_PC_2,
   TRIGGERING_PC_3,
@@ -86,7 +95,8 @@ enum Modes {
   ON_MSG,
   OFF_MSG,
   SET_HOURS,
-  SET_MINUTES
+  SET_MINUTES,
+  SET_DISPLAY
 };
 
 bool reverseStartAnimation = false;
@@ -104,6 +114,7 @@ decode_results results;
 unsigned long lastCodeReceivedTime = 0;
 
 Modes currentMode = INIT_TEST;
+Modes currentDisplayMode = MAIN_CLOCK;
 unsigned long lastModeSwitch = 0;
 
 int activeSegment = 0;
@@ -180,6 +191,10 @@ void refreshScreen() {
   if(activeSegment > 3) activeSegment = 0;
 }
 
+bool isOnMainScreen() {
+  return currentMode == currentDisplayMode || currentMode == PC_TRIGGERED;
+}
+
 void switchMode(Modes mode) {
   lastModeSwitch = millis();
   currentMode = mode;
@@ -188,12 +203,21 @@ void switchMode(Modes mode) {
     case INIT_TEST:
       turnOnAllSegments();
       break;
-    case CLOCK:
+    case MAIN_CLOCK:
       displayNumber(0, hours / 10);
       displayNumber(1, hours % 10);
       displayNumber(2, minutes / 10);
       displayNumber(3, minutes % 10);
       turnOnColon();
+      break;
+    case MAIN_TEMP:
+      displaySymbol(0, DASH);
+      displaySymbol(1, DASH);
+      displaySymbol(2, DEG);
+      displaySymbol(3, LETTER_C);
+      break;
+    case MAIN_SOFF:
+      turnOffScreen();
       break;
     case TRIGGERING_PC_1:
       displaySymbol(0, ONE_LINE);
@@ -214,10 +238,7 @@ void switchMode(Modes mode) {
       displaySymbol(3, THREE_LINE);
       break;
     case PC_TRIGGERED:
-      displaySymbol(0, EMPTY);
-      displaySymbol(1, EMPTY);
-      displaySymbol(2, EMPTY);
-      displaySymbol(3, EMPTY);
+      turnOffScreen();
       break;
     case ON_MSG:
       displaySymbol(0, LETTER_O);
@@ -243,6 +264,33 @@ void switchMode(Modes mode) {
       displayNumber(2, minutes / 10);
       displayNumber(3, minutes % 10);
       break;
+    case SET_DISPLAY:
+      switch (currentDisplayMode) {
+        case MAIN_CLOCK:
+          displaySymbol(0, LETTER_T);
+          displaySymbol(1, LETTER_I);
+          displaySymbol(2, LETTER_M);
+          displaySymbol(3, LETTER_E);
+          break;
+        case MAIN_TEMP:
+          displaySymbol(0, LETTER_T);
+          displaySymbol(1, LETTER_E);
+          displaySymbol(2, LETTER_M);
+          displaySymbol(3, LETTER_P);
+          break;
+        case MAIN_SOFF:
+          displaySymbol(0, LETTER_S);
+          displaySymbol(1, LETTER_O);
+          displaySymbol(2, LETTER_F);
+          displaySymbol(3, LETTER_F);
+          break;
+        default:
+          displaySymbol(0, DASH);
+          displaySymbol(1, DASH);
+          displaySymbol(2, DASH);
+          displaySymbol(3, DASH);
+      }
+      break;
     default:
       displaySymbol(0, LETTER_E);
       displaySymbol(1, LETTER_R);
@@ -265,6 +313,7 @@ void autoSwitchMode() {
     case OFF_MSG: timeout = 3000; break;
     case SET_HOURS: timeout = 10000; break;
     case SET_MINUTES: timeout = 10000; break;
+    case SET_DISPLAY: timeout = 3000; break;
   }
   if (timeout > 0 && millis() - lastModeSwitch >= timeout) {
     switch (currentMode) {
@@ -283,7 +332,7 @@ void autoSwitchMode() {
         switchMode(TRIGGERING_PC_2);
         break;
       default:
-        switchMode(CLOCK);
+        switchMode(currentDisplayMode);
     }
   }
 }
@@ -309,7 +358,7 @@ void onVolumeButtonsClick(int diff) {
 
 void monitorPcState() {
   pcIsOn = analogRead(pcStatePin) < VOLTAGE_THRESHOLD;
-  if(pcIsOn != lastPcState && currentMode == CLOCK) switchMode(pcIsOn ? ON_MSG : OFF_MSG);
+  if(pcIsOn != lastPcState && isOnMainScreen()) switchMode(pcIsOn ? ON_MSG : OFF_MSG);
   lastPcState = pcIsOn;
   if(pcTriggerReleaseTime > 0 && millis() > pcTriggerReleaseTime) {
     pcTriggerReleaseTime = 0;
@@ -322,20 +371,29 @@ void readIrCodes() {
     if(lastCodeReceivedTime == 0) {
       bool codeIsCorrect = true;
       serialPrintUint64(results.value, HEX);
-      Serial.println("");
       switch(results.value) {
         case IR_01_INPUT: // clock setup
           switch(currentMode) {
-            case CLOCK: switchMode(SET_HOURS); break;
             case SET_HOURS: switchMode(SET_MINUTES); break;
-            case SET_MINUTES: switchMode(CLOCK); break;
+            case SET_MINUTES: switchMode(currentDisplayMode); break;
+            default: switchMode(SET_HOURS);
           }
           break;
         case IR_02_POWER: // on/off the pc
-          if(currentMode == CLOCK) {
+          if(isOnMainScreen()) {
             reverseStartAnimation = false;
             switchMode(TRIGGERING_PC_1);
           }
+          break;
+        case IR_04_CINEMA: // display modes
+          if(currentMode == SET_DISPLAY) {
+            switch(currentDisplayMode) {
+              case MAIN_CLOCK: currentDisplayMode = MAIN_TEMP; break;
+              case MAIN_TEMP: currentDisplayMode = MAIN_SOFF; break;
+              default: currentDisplayMode = MAIN_CLOCK;
+            }
+          }
+          switchMode(SET_DISPLAY);
           break;
         case IR_09_VOLUP: // VOL+ or value up
           onVolumeButtonsClick(1);
@@ -352,12 +410,12 @@ void readIrCodes() {
   }
 }
 
-void updateTime() {
+void updateTimeOnScreen() {
   DateTime now = rtc.now();
   hours = now.hour();
   minutes = now.minute();
   nextClockRefreshTime = millis() + (61 - now.second()) * 1000;
-  if(currentMode == CLOCK) {
+  if(currentMode == MAIN_CLOCK) {
     displayNumber(0, hours / 10);
     displayNumber(1, hours % 10);
     displayNumber(2, minutes / 10);
@@ -380,11 +438,11 @@ void setup() {
   pinMode(pcTriggerPin, OUTPUT);
   Serial.println("System initialized");
   switchMode(INIT_TEST);
-  updateTime();
+  updateTimeOnScreen();
 }
 
 void loop() {
-  if(millis() > nextClockRefreshTime) updateTime();
+  if(millis() > nextClockRefreshTime) updateTimeOnScreen();
   monitorPcState();
   readIrCodes();
   autoSwitchMode();

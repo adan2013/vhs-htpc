@@ -1,0 +1,74 @@
+﻿<Window x:Class="RemoteWindowsController.StorageManager"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RemoteWindowsController"
+        mc:Ignorable="d"
+        Title="Storage Manager" Height="450" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Grid Background="SteelBlue">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Column="0" Grid.Row="0" VerticalContentAlignment="Bottom" Margin="10 0 0 0" FontSize="28" FontWeight="Bold">Profiles</Label>
+        <Label Grid.Column="1" Grid.Row="0" VerticalContentAlignment="Bottom" Margin="10 0 0 0" FontSize="28" FontWeight="Bold">Apps</Label>
+        <ScrollViewer Grid.Column="0" Grid.Row="1" Margin="5">
+            <StackPanel>
+                <ComboBox Margin="5" Name="profilesList" />
+                <Label>Name:</Label>
+                <TextBox Margin="5" Name="profileName" MaxLength="20" />
+                <Label>Items:</Label>
+                <StackPanel Name="profileItemsContainer"/>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel Grid.Column="1" Grid.Row="1" Margin="5">
+            <ComboBox Margin="5" Name="appsList" />
+            <Label>Name:</Label>
+            <TextBox Margin="5" Name="appName" MaxLength="20" />
+            <Label>Path to the exe file:</Label>
+            <TextBox Margin="5" Name="appPath" MaxLength="200" />
+            <Label>Optional arguments:</Label>
+            <TextBox Margin="5" Name="appArgs" MaxLength="200" />
+        </StackPanel>
+        <Grid Grid.Column="0" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Column="0" Grid.Row="0" Margin="5" Name="saveProfile" Click="saveProfile_Click">Save</Button>
+            <Button Grid.Column="0" Grid.Row="1" Margin="5" Name="restoreProfile" Click="restoreProfile_Click">Restore</Button>
+            <Button Grid.Column="1" Grid.Row="0" Margin="5" Name="newProfile" Click="newProfile_Click">New profile</Button>
+            <Button Grid.Column="1" Grid.Row="1" Margin="5" Name ="deleteProfile" Click="deleteProfile_Click">Delete profile</Button>
+            <Button Grid.Column="2" Grid.Row="0" Margin="5" Name="moveUpProfile" Click="moveUpProfile_Click">Move up</Button>
+            <Button Grid.Column="2" Grid.Row="1" Margin="5" Name="moveDownProfile" Click="moveDownProfile_Click">Move down</Button>
+        </Grid>
+        <Grid Grid.Column="1" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Column="0" Grid.Row="0" Margin="5" Name="saveApp" Click="saveApp_Click">Save</Button>
+            <Button Grid.Column="0" Grid.Row="1" Margin="5" Name="restoreApp" Click="restoreApp_Click">Restore</Button>
+            <Button Grid.Column="1" Grid.Row="0" Margin="5" Name="newApp" Click="newApp_Click">New app</Button>
+            <Button Grid.Column="1" Grid.Row="1" Margin="5" Name ="deleteApp" Click="deleteApp_Click">Delete app</Button>
+            <Button Grid.Column="2" Grid.Row="0" Margin="5" Name="moveUpApp" Click="moveUpApp_Click">Move up</Button>
+            <Button Grid.Column="2" Grid.Row="1" Margin="5" Name="moveDownApp" Click="moveDownApp_Click">Move down</Button>
+        </Grid>
+    </Grid>
+</Window>

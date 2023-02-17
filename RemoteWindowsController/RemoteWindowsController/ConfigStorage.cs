@@ -57,6 +57,8 @@ namespace RemoteWindowsController
         private List<Profile> profiles;
         private List<AppShortcut> appShortcuts;
 
+        public int selectedProfileIndex = 0;
+
         public ConfigStorage()
         {
             profiles = new List<Profile>() { generateInitialProfile() };
@@ -277,6 +279,19 @@ namespace RemoteWindowsController
                 return true;
             }
             return false;
+        }
+
+        public string getSlotValue(int slotNumber)
+        {
+            try
+            {
+                Profile profile = profiles[selectedProfileIndex];
+                return profile.items[slotNumber - 1].value;
+            }
+            catch
+            {
+                return "";
+            }
         }
     }
 }

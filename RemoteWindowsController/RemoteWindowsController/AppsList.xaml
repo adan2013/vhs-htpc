@@ -16,12 +16,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        <Label Grid.Column="1" Grid.Row="0" VerticalContentAlignment="Bottom" Margin="10 0 0 0" FontSize="28" FontWeight="Bold">Apps</Label>
-        <StackPanel Grid.Column="1" Grid.Row="1" Margin="10 0 0 0">
-            <Border Name="border1" BorderThickness="6 0 0 0" BorderBrush="Black">
-                <Label Margin="5 0 0 0" FontSize="22" Name="app1">App slot 1</Label>
-            </Border>
-        </StackPanel>
+        <Label Grid.Column="0" Grid.Row="0" VerticalContentAlignment="Bottom" Margin="10 0 0 0" FontSize="28" FontWeight="Bold">Apps</Label>
+        <StackPanel Grid.Column="0" Grid.Row="1" Margin="10 0 0 0" Name="listContainer"/>
+        <Label Grid.Column="0" Grid.Row="2" HorizontalContentAlignment="Center" FontSize="12">Press PROFILE to open the settings window</Label>
     </Grid>
 </Window>

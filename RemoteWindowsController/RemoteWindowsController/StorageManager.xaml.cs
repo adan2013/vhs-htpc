@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -247,6 +248,18 @@ namespace RemoteWindowsController
             {
                 refreshListsOfProfilesAndApps();
                 appsList.SelectedIndex += 1;
+            }
+        }
+
+        private void TestTheCommand_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Process.Start(appPath.Text.Trim(), appArgs.Text.Trim());
+            }
+            catch
+            {
+                MessageBox.Show("Action failed!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

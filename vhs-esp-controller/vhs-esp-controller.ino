@@ -366,7 +366,9 @@ void autoSwitchMode() {
 }
 
 void sendCommand(PcCommands cmd) {
-  Serial.println(cmd, DEC);
+  Serial.print("B");
+  Serial.print(cmd, DEC);
+  Serial.println();
 }
 
 void onVolumeButtonsClick(int diff) {

@@ -44,7 +44,8 @@ namespace RemoteWindowsController
 
         private void CpuTemp_DataUpdated(TemperatureMonitor monitor)
         {
-            serialMonitor.sendData("T" + monitor.currentCpuTemperature.ToString());
+            int temp = monitor.currentCpuTemperature;
+            serialMonitor.sendData("T" + (temp < 10 ? "0" + temp.ToString() : temp.ToString()));
         }
 
         private void SerialMonitor_DataReceived(string content)

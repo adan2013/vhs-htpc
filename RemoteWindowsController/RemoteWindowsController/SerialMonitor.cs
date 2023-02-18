@@ -16,25 +16,32 @@ namespace RemoteWindowsController
 
         public SerialMonitor()
         {
-            string[] existingPorts = SerialPort.GetPortNames();
-            System.Diagnostics.Trace.WriteLine(existingPorts.Length + " com port found");
-            if (existingPorts.Length > 0)
+            try
             {
-                string portName = existingPorts[existingPorts.Length - 1];
-                port = new SerialPort(portName, 115200);
-                port.Open();
-                if (port.IsOpen)
+                string[] existingPorts = SerialPort.GetPortNames();
+                System.Diagnostics.Trace.WriteLine(existingPorts.Length + " com port found");
+                if (existingPorts.Length > 0)
                 {
-                    System.Diagnostics.Trace.WriteLine("Listening on port '" + portName + "'");
-                    port.DataReceived += Port_DataReceived; ;
+                    string portName = existingPorts[existingPorts.Length - 1];
+                    port = new SerialPort(portName, 115200);
+                    port.Open();
+                    if (port.IsOpen)
+                    {
+                        System.Diagnostics.Trace.WriteLine("Listening on port '" + portName + "'");
+                        port.DataReceived += Port_DataReceived; ;
+                    }
                 }
             }
+            catch { }
         }
+
+        public bool isConnected() => port != null && port.IsOpen;
 
         public bool sendData(string content)
         {
-            if (port != null && port.IsOpen)
+            if (isConnected())
             {
+                System.Diagnostics.Trace.WriteLine("Sending: " + content);
                 port.Write(content + "\n");
                 return true;
             }

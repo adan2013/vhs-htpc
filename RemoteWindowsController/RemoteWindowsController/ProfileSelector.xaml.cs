@@ -30,7 +30,7 @@ namespace RemoteWindowsController
             config = ((App)Application.Current).config;
             profiles = config.getProfiles();
             ((App)Application.Current).cpuTemp.DataUpdated += CpuTemp_DataUpdated;
-            CpuTemp_DataUpdated(((App)Application.Current).cpuTemp);
+            ((App)Application.Current).cpuTemp.readCpuData();
             cursorIndex = config.selectedProfileIndex;
             foreach (Profile profile in profiles)
             {

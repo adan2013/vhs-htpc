@@ -64,6 +64,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DiagMessage.xaml.cs">
+      <DependentUpon>DiagMessage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RemoteControlInterpreter.cs" />
     <Compile Include="SerialMonitor.cs" />
     <Compile Include="StorageManager.xaml.cs">
@@ -83,6 +86,10 @@
     </Compile>
     <Compile Include="ConfigStorage.cs" />
     <Compile Include="IRemoteControllable.cs" />
+    <Page Include="DiagMessage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ProfileSelector.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

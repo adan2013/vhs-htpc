@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using OpenHardwareMonitor.Hardware;
 
 namespace RemoteWindowsController
@@ -27,39 +28,55 @@ namespace RemoteWindowsController
             try
             {
                 readCpuData(true);
-                timer = new Timer((object state) => readCpuData(), null, 0, PROBE_INTERVAL);
+                timer = new Timer(callback, null, 0, PROBE_INTERVAL);
             } catch
             {
                 System.Diagnostics.Trace.WriteLine("Temperature monitor DISABLED");
             }
         }
 
-        private async void readCpuData(bool showDebugLog = false)
+        private void callback(object state)
         {
-            if (showDebugLog) System.Diagnostics.Trace.WriteLine("Reading CPU informations..." + Environment.NewLine);
-            SystemInfo systemInfo = await ReadSystemInfoAsync();
-
-            foreach (SystemInfo.CoreInfo cInfo in systemInfo.CoreInfos)
+            try
             {
-                if (showDebugLog) System.Diagnostics.Trace.WriteLine($"Name: {cInfo.Name} | Load: {cInfo.Load}% | Temp: {cInfo.Temp}C");
-                if (cInfo.Name.Contains("CPU Total") && cInfo.Load > 0)
-                {
-                    int loadValue = (int)cInfo.Load;
-                    if (loadValue < 0) loadValue = 0;
-                    if (loadValue > 100) loadValue = 100;
-                    currentCpuUsage = loadValue;
-                }
-                if (cInfo.Name.Contains("CPU Package") && cInfo.Temp > 0)
-                {
-                    int tempValue = (int)cInfo.Temp;
-                    if (tempValue < 0) tempValue = 0;
-                    if (tempValue > 99) tempValue = 99;
-                    currentCpuTemperature = tempValue;
-                    maxCpuTemperature = Math.Max(maxCpuTemperature, currentCpuTemperature);
-                    minCpuTemperature = Math.Min(minCpuTemperature == 0 ? 100 : minCpuTemperature, currentCpuTemperature);
-                }
+                readCpuData();
             }
-            DataUpdated?.Invoke(this);
+            catch { }
+        }
+
+        public async void readCpuData(bool showDebugLog = false)
+        {
+            try
+            {
+                if (showDebugLog) System.Diagnostics.Trace.WriteLine("Reading CPU informations..." + Environment.NewLine);
+                SystemInfo systemInfo = await ReadSystemInfoAsync();
+
+                foreach (SystemInfo.CoreInfo cInfo in systemInfo.CoreInfos)
+                {
+                    if (showDebugLog) System.Diagnostics.Trace.WriteLine($"Name: {cInfo.Name} | Load: {cInfo.Load}% | Temp: {cInfo.Temp}C");
+                    if (cInfo.Name.Contains("CPU Total") && cInfo.Load > 0)
+                    {
+                        int loadValue = (int)cInfo.Load;
+                        if (loadValue < 0) loadValue = 0;
+                        if (loadValue > 100) loadValue = 100;
+                        currentCpuUsage = loadValue;
+                    }
+                    if (cInfo.Name.Contains("CPU Package") && cInfo.Temp > 0)
+                    {
+                        int tempValue = (int)cInfo.Temp;
+                        if (tempValue < 0) tempValue = 0;
+                        if (tempValue > 99) tempValue = 99;
+                        currentCpuTemperature = tempValue;
+                        maxCpuTemperature = Math.Max(maxCpuTemperature, currentCpuTemperature);
+                        minCpuTemperature = Math.Min(minCpuTemperature == 0 ? 100 : minCpuTemperature, currentCpuTemperature);
+                    }
+                }
+                DataUpdated?.Invoke(this);
+            }
+            catch
+            {
+                System.Diagnostics.Trace.WriteLine("Error - readCpuData");
+            }
         }
 
         private static async Task<SystemInfo> ReadSystemInfoAsync()
@@ -98,6 +115,10 @@ namespace RemoteWindowsController
                             }
                         }
                     }
+                }
+                catch
+                {
+                    System.Diagnostics.Trace.WriteLine("Error - read task");
                 }
                 finally
                 {

@@ -119,8 +119,11 @@ enum Modes {
   SET_DISPLAY
 };
 
-bool reverseStartAnimation = false;
+String serialBuffer = "";
+boolean serialDataIsReady = false;
 int cpuTemp = 0;
+
+bool reverseStartAnimation = false;
 bool pcIsOn = false;
 bool lastPcState = false;
 unsigned long pcTriggerReleaseTime = 0;
@@ -524,8 +527,32 @@ void setup() {
 
 void loop() {
   if(millis() > nextClockRefreshTime) updateTimeOnScreen();
+  if(serialDataIsReady) {
+    String cmdType = serialBuffer.substring(0, 1);
+    String cmdData = serialBuffer.substring(1);
+    if(cmdType == "T") {
+      cpuTemp = cmdData.toInt();
+      if(currentMode == MAIN_TEMP && pcIsOn) {
+        switchMode(MAIN_TEMP);
+      }
+    }
+    serialDataIsReady = false;
+    serialBuffer = "";
+  }
   monitorPcState();
   readIrCodes();
   autoSwitchMode();
   refreshScreen();
+}
+
+void serialEvent() {
+  while(Serial.available() > 0) {
+    char inChar = (char)Serial.read();
+    if(inChar == '\n') {
+      serialDataIsReady = true;
+      break;
+    }else{
+      serialBuffer += inChar;
+    }
+  }
 }

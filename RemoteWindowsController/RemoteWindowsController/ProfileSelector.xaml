@@ -18,27 +18,8 @@
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Label Grid.Column="1" Grid.Row="0" VerticalContentAlignment="Bottom" Margin="10 0 0 0" FontSize="28" FontWeight="Bold">Profiles manager</Label>
-        <StackPanel Grid.Column="1" Grid.Row="1" Margin="10 0 0 0">
-            <Border Name="border1" BorderThickness="6 0 0 0" BorderBrush="Black">
-                <Label Margin="5 0 0 0" FontSize="22" Name="profile1">Profile slot 1</Label>
-            </Border>
-            <Border Name="border2">
-                <Label Margin="5 0 0 0" FontSize="22" Name="profile2">Profile slot 2</Label>
-            </Border>
-            <Border Name="border3">
-                <Label Margin="5 0 0 0" FontSize="22" Name="profile3">Profile slot 3</Label>
-            </Border>
-            <Border Name="border4">
-                <Label Margin="5 0 0 0" FontSize="22" Name="profile4">Profile slot 4</Label>
-            </Border>
-            <Border Name="border5">
-                <Label Margin="5 0 0 0" FontSize="22" Name="profile5">Profile slot 5</Label>
-            </Border>
-            <Border Name="border6">
-                <Label Margin="5 0 0 0" FontSize="22" Name="profile6">Profile slot 6</Label>
-            </Border>
-        </StackPanel>
+        <Label Grid.Column="1" Grid.Row="0" VerticalContentAlignment="Bottom" Margin="10 0 0 0" FontSize="28" FontWeight="Bold">Profile manager</Label>
+        <StackPanel Grid.Column="1" Grid.Row="1" Margin="10 0 0 0" Name="listContainer"/>
         <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -49,12 +30,12 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Label Grid.Column="0" Grid.Row="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Name="slot1">SLOT 1</Label>
-            <Label Grid.Column="1" Grid.Row="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Name="slot2">SLOT 2</Label>
-            <Label Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Name="slot3">SLOT 3</Label>
-            <Label Grid.Column="1" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Name="slot4">SLOT 4</Label>
-            <Label Grid.Column="0" Grid.Row="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Name="slot5">SLOT 5</Label>
-            <Label Grid.Column="1" Grid.Row="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" Name="slot6">SLOT 6</Label>
+            <TextBlock Grid.Column="0" Grid.Row="0" FontSize="20" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot1">SLOT 1</TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="0" FontSize="20" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot2">SLOT 2</TextBlock>
+            <TextBlock Grid.Column="0" Grid.Row="1" FontSize="20" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot3">SLOT 3</TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="1" FontSize="20" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot4">SLOT 4</TextBlock>
+            <TextBlock Grid.Column="0" Grid.Row="2" FontSize="20" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot5">SLOT 5</TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="2" FontSize="20" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot6">SLOT 6</TextBlock>
             <Border Grid.Column="0" Grid.Row="0" BorderBrush="Black" BorderThickness="1" Margin="10" />
             <Border Grid.Column="1" Grid.Row="0" BorderBrush="Black" BorderThickness="1" Margin="10" />
             <Border Grid.Column="0" Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="10" />

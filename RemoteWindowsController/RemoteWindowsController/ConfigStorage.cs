@@ -74,7 +74,7 @@ namespace RemoteWindowsController
         private Profile generateInitialProfile()
         {
             List<ProfileItem> items = new List<ProfileItem>();
-            for (int i = 1; i < 7; i++) items.Add(new ProfileItem("Slot " + i, ""));
+            for (int i = 1; i < 7; i++) items.Add(new ProfileItem("Slot " + i, "Slot value 1"));
             return new Profile("New profile", items);
         }
 

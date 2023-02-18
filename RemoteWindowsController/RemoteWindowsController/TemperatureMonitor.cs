@@ -11,7 +11,7 @@ namespace RemoteWindowsController
 {
     public class TemperatureMonitor
     {
-        private const int PROBE_INTERVAL = 6000;
+        private const int PROBE_INTERVAL = 8000;
 
         public int currentCpuTemperature = 0;
         public int maxCpuTemperature = 0;

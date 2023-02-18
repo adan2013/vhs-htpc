@@ -36,7 +36,6 @@ namespace RemoteWindowsController
             if (port != null && port.IsOpen)
             {
                 port.Write(content + "\n");
-                System.Diagnostics.Trace.WriteLine("Sending data: " + content);
                 return true;
             }
             return false;

@@ -157,7 +157,7 @@ namespace RemoteWindowsController
             List<ProfileItem> items = new List<ProfileItem>();
             for(int i = 0; i < nameFieldsRef.Length; i++)
             {
-                items.Add(new ProfileItem(nameFieldsRef[i].Text.Trim(), valueFieldsRef[i].Text.Trim()));
+                items.Add(new ProfileItem(nameFieldsRef[i].Text.Trim(), valueFieldsRef[i].Text));
             }
             config.updateProfile(profilesList.SelectedIndex, new Profile(profileName.Text.Trim(), items));
             refreshListsOfProfilesAndApps();

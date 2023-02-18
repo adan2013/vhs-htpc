@@ -9,10 +9,10 @@ namespace RemoteWindowsController
 {
     public class SerialMonitor
     {
-        SerialPort? port;
+        SerialPort port;
 
         public delegate void DataReceivedDelegate(string content);
-        public event DataReceivedDelegate? DataReceived;
+        public event DataReceivedDelegate DataReceived;
 
         public SerialMonitor()
         {
@@ -29,6 +29,16 @@ namespace RemoteWindowsController
                     port.DataReceived += Port_DataReceived; ;
                 }
             }
+        }
+
+        public bool sendData(string content)
+        {
+            if (port != null && port.IsOpen)
+            {
+                port.Write(content + "\n");
+                return true;
+            }
+            return false;
         }
 
         private void Port_DataReceived(object sender, SerialDataReceivedEventArgs e)

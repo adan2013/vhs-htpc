@@ -26,8 +26,11 @@ namespace RemoteWindowsController
         {
             InitializeComponent();
             Left = SystemParameters.PrimaryScreenWidth / 2 - Width / 2;
+            cpuDataFooter.FontFamily = new FontFamily("Consolas");
             config = ((App)Application.Current).config;
             profiles = config.getProfiles();
+            ((App)Application.Current).cpuTemp.DataUpdated += CpuTemp_DataUpdated;
+            CpuTemp_DataUpdated(((App)Application.Current).cpuTemp);
             cursorIndex = config.selectedProfileIndex;
             foreach (Profile profile in profiles)
             {
@@ -47,6 +50,29 @@ namespace RemoteWindowsController
                 listContainer.Children.Add(border);
             }
             refreshCursor();
+        }
+
+        private string parseCpuValue(int val)
+        {
+            if (val < 10) return "0" + val.ToString();
+            return val.ToString();
+        }
+
+        private void CpuTemp_DataUpdated(TemperatureMonitor monitor)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                cpuDataFooter.Content =
+                "CPU STATS: Load: "
+                + parseCpuValue(monitor.currentCpuUsage)
+                + "% | Temp: "
+                + parseCpuValue(monitor.currentCpuTemperature)
+                + "°C | Min: "
+                + parseCpuValue(monitor.minCpuTemperature)
+                + "°C | Max: "
+                + parseCpuValue(monitor.maxCpuTemperature)
+                + "°C";
+            });
         }
 
         private void refreshCursor()

@@ -9,7 +9,7 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
-        >
+        Topmost="True">
     <Grid Background="SteelBlue">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>

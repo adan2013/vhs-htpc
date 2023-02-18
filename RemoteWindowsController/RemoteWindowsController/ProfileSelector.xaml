@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RemoteWindowsController"
         mc:Ignorable="d"
-        Title="Remote Windows Controller" Height="450" Width="650"
+        Title="Remote Windows Controller" Height="500" Width="650"
         WindowStartupLocation="Manual" Top="0"
         WindowStyle="None"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        Topmost="True">
     <Grid Background="SteelBlue">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
@@ -17,10 +18,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <Label Grid.Column="1" Grid.Row="0" VerticalContentAlignment="Bottom" Margin="10 0 0 0" FontSize="28" FontWeight="Bold">Profile manager</Label>
         <StackPanel Grid.Column="1" Grid.Row="1" Margin="10 0 0 0" Name="listContainer"/>
-        <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="3">
+        <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -43,5 +45,8 @@
             <Border Grid.Column="0" Grid.Row="2" BorderBrush="Black" BorderThickness="1" Margin="10" />
             <Border Grid.Column="1" Grid.Row="2" BorderBrush="Black" BorderThickness="1" Margin="10" />
         </Grid>
+        <Label Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" Name="cpuDataFooter">
+            CPU stats not available
+        </Label>
     </Grid>
 </Window>

@@ -16,9 +16,7 @@ using System.Windows.Shapes;
 
 namespace RemoteWindowsController
 {
-    /// <summary>
-    /// Interaction logic for StorageManager.xaml
-    /// </summary>
+
     public partial class StorageManager : Window
     {
         ConfigStorage config;

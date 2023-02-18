@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace RemoteWindowsController
 {
-    
+
     public enum WindowType
     {
         None,
@@ -30,14 +30,21 @@ namespace RemoteWindowsController
         public ConfigStorage config = new ConfigStorage();
         public SerialMonitor serialMonitor = new SerialMonitor();
         public RemoteControlInterpreter remote;
-        
+        public TemperatureMonitor cpuTemp = new TemperatureMonitor();
+
         WindowType activeWindow = WindowType.None;
-        Window? openedWindowRef;
-            
+        Window openedWindowRef;
+
         public App()
         {
             remote = new RemoteControlInterpreter(this);
             serialMonitor.DataReceived += SerialMonitor_DataReceived;
+            cpuTemp.DataUpdated += CpuTemp_DataUpdated;
+        }
+
+        private void CpuTemp_DataUpdated(TemperatureMonitor monitor)
+        {
+            serialMonitor.sendData("T" + monitor.currentCpuTemperature.ToString());
         }
 
         private void SerialMonitor_DataReceived(string content)

@@ -38,12 +38,13 @@ namespace RemoteWindowsController
                 {
                     Margin = new Thickness(5, 0, 0, 0),
                     BorderThickness = new Thickness(6, 0, 0, 0),
-                    BorderBrush = Brushes.Black
+                    BorderBrush = Brushes.WhiteSmoke
                 };
                 Label label = new Label()
                 {
                     Margin = new Thickness(5, 0, 0, 0),
                     FontSize = 22,
+                    Foreground = Brushes.White,
                     Content = profile.name
                 };
                 border.Child = label;
@@ -63,8 +64,7 @@ namespace RemoteWindowsController
             Dispatcher.Invoke(() =>
             {
                 cpuDataFooter.Content =
-                "CPU STATS: Load: "
-                + parseCpuValue(monitor.currentCpuUsage)
+                parseCpuValue(monitor.currentCpuUsage)
                 + "% | Temp: "
                 + parseCpuValue(monitor.currentCpuTemperature)
                 + "°C | Min: "

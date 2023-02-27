@@ -79,6 +79,7 @@ namespace RemoteWindowsController
                 ProfileItem item = currentProfile.items[i];
                 Label lbl = new Label() {
                     Margin = new Thickness(5, 10, 5, 5),
+                    Foreground = Brushes.White,
                     Content = "- Item " + (i + 1).ToString() + " -",
                     HorizontalContentAlignment = HorizontalAlignment.Center,
                 };

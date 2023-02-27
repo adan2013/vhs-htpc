@@ -11,6 +11,8 @@ namespace RemoteWindowsController
     {
         SerialPort port;
 
+        public readonly string portName;
+
         public delegate void DataReceivedDelegate(string content);
         public event DataReceivedDelegate DataReceived;
 
@@ -22,13 +24,13 @@ namespace RemoteWindowsController
                 System.Diagnostics.Trace.WriteLine(existingPorts.Length + " com port found");
                 if (existingPorts.Length > 0)
                 {
-                    string portName = existingPorts[existingPorts.Length - 1];
+                    portName = existingPorts[existingPorts.Length - 1];
                     port = new SerialPort(portName, 115200);
                     port.Open();
                     if (port.IsOpen)
                     {
                         System.Diagnostics.Trace.WriteLine("Listening on port '" + portName + "'");
-                        port.DataReceived += Port_DataReceived; ;
+                        port.DataReceived += Port_DataReceived;
                     }
                 }
             }

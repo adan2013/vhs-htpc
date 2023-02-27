@@ -5,14 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RemoteWindowsController"
         mc:Ignorable="d"
-        Title="Remote Windows Controller" Height="500" Width="650"
+        Title="Remote Windows Controller" Height="420" Width="620"
         WindowStartupLocation="Manual" Top="0"
         WindowStyle="None"
         ResizeMode="NoResize"
-        Topmost="True">
-    <Grid Background="SteelBlue">
+        Topmost="True"
+        ShowInTaskbar="False"
+        Background="#0063b1"
+        Foreground="#fff"
+        >
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -20,7 +24,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <Label Grid.Column="1" Grid.Row="0" VerticalContentAlignment="Bottom" Margin="10 0 0 0" FontSize="28" FontWeight="Bold">Profile manager</Label>
+        <Label Grid.Column="1" Grid.Row="0" VerticalContentAlignment="Bottom" Margin="10 0 0 0" FontSize="28" Foreground="#fff" FontWeight="Bold">Profile manager</Label>
         <StackPanel Grid.Column="1" Grid.Row="1" Margin="10 0 0 0" Name="listContainer"/>
         <Grid Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
@@ -32,20 +36,20 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Column="0" Grid.Row="0" FontSize="20" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot1">SLOT 1</TextBlock>
-            <TextBlock Grid.Column="1" Grid.Row="0" FontSize="20" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot2">SLOT 2</TextBlock>
-            <TextBlock Grid.Column="0" Grid.Row="1" FontSize="20" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot3">SLOT 3</TextBlock>
-            <TextBlock Grid.Column="1" Grid.Row="1" FontSize="20" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot4">SLOT 4</TextBlock>
-            <TextBlock Grid.Column="0" Grid.Row="2" FontSize="20" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot5">SLOT 5</TextBlock>
-            <TextBlock Grid.Column="1" Grid.Row="2" FontSize="20" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot6">SLOT 6</TextBlock>
-            <Border Grid.Column="0" Grid.Row="0" BorderBrush="Black" BorderThickness="1" Margin="10" />
-            <Border Grid.Column="1" Grid.Row="0" BorderBrush="Black" BorderThickness="1" Margin="10" />
-            <Border Grid.Column="0" Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="10" />
-            <Border Grid.Column="1" Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="10" />
-            <Border Grid.Column="0" Grid.Row="2" BorderBrush="Black" BorderThickness="1" Margin="10" />
-            <Border Grid.Column="1" Grid.Row="2" BorderBrush="Black" BorderThickness="1" Margin="10" />
+            <TextBlock Grid.Column="0" Grid.Row="0" FontSize="18" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot1">SLOT 1</TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="0" FontSize="18" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot2">SLOT 2</TextBlock>
+            <TextBlock Grid.Column="0" Grid.Row="1" FontSize="18" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot3">SLOT 3</TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="1" FontSize="18" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot4">SLOT 4</TextBlock>
+            <TextBlock Grid.Column="0" Grid.Row="2" FontSize="18" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot5">SLOT 5</TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="2" FontSize="18" Margin="10" TextWrapping="WrapWithOverflow" HorizontalAlignment="Center" VerticalAlignment="Center" Name="slot6">SLOT 6</TextBlock>
+            <Border Grid.Column="0" Grid.Row="0" BorderBrush="#fff" BorderThickness="1" Margin="10" />
+            <Border Grid.Column="1" Grid.Row="0" BorderBrush="#fff" BorderThickness="1" Margin="10" />
+            <Border Grid.Column="0" Grid.Row="1" BorderBrush="#fff" BorderThickness="1" Margin="10" />
+            <Border Grid.Column="1" Grid.Row="1" BorderBrush="#fff" BorderThickness="1" Margin="10" />
+            <Border Grid.Column="0" Grid.Row="2" BorderBrush="#fff" BorderThickness="1" Margin="10" />
+            <Border Grid.Column="1" Grid.Row="2" BorderBrush="#fff" BorderThickness="1" Margin="10" />
         </Grid>
-        <Label Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" Name="cpuDataFooter">
+        <Label Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" Foreground="#eee" Name="cpuDataFooter">
             CPU stats not available
         </Label>
     </Grid>

@@ -9,8 +9,11 @@
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         ResizeMode="NoResize"
-        Topmost="True">
-    <Grid Background="SteelBlue">
+        Topmost="True"
+        ShowInTaskbar="False"
+        Background="#0063b1"
+        Foreground="#fff">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
@@ -19,8 +22,8 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        <Label Grid.Column="0" Grid.Row="0" VerticalContentAlignment="Bottom" Margin="10 0 0 0" FontSize="28" FontWeight="Bold">Apps</Label>
+        <Label Grid.Column="0" Grid.Row="0" VerticalContentAlignment="Bottom" Margin="10 0 0 0" FontSize="28" FontWeight="Bold" Foreground="#fff">Apps</Label>
         <StackPanel Grid.Column="0" Grid.Row="1" Margin="10 0 0 0" Name="listContainer"/>
-        <Label Grid.Column="0" Grid.Row="2" HorizontalContentAlignment="Center" FontSize="12">Press PROFILE to open the settings window</Label>
+        <Label Grid.Column="0" Grid.Row="2" HorizontalContentAlignment="Center" FontSize="12" Foreground="#ddd">Press PROFILE to open the settings window</Label>
     </Grid>
 </Window>

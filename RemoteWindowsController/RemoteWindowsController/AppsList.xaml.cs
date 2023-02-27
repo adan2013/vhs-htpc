@@ -33,11 +33,12 @@ namespace RemoteWindowsController
                 Border border = new Border() {
                     Margin = new Thickness(5, 0, 0, 0),
                     BorderThickness = new Thickness(6, 0, 0, 0),
-                    BorderBrush = Brushes.Black
+                    BorderBrush = Brushes.White
                 };
                 Label label = new Label() {
                     Margin = new Thickness(5, 0, 0, 0),
                     FontSize = 22,
+                    Foreground = Brushes.White,
                     Content = app.name
                 };
                 border.Child = label;

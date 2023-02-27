@@ -5,13 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RemoteWindowsController"
         mc:Ignorable="d"
-        Title="DiagMessage" Height="250" Width="400"
+        Title="DiagMessage" Height="150" Width="400"
         WindowStyle="None"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        Topmost="True">
-    <Grid Background="SteelBlue">
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" Name="status">
+        Topmost="True"
+        Background="#0063b1"
+        Foreground="#fff"
+        ShowInTaskbar="False">
+    <Grid>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Name="status">
             STATUS
         </TextBlock>
     </Grid>

@@ -85,22 +85,23 @@ enum IrCodes {
 
 enum PcCommands {
   CMD_PROFILE = 1,
-  CMD_FULLS = 2,
-  CMD_RELOAD = 3,
-  CMD_MUTE = 4,
-  CMD_PLAY = 5,
-  CMD_UP = 6,
-  CMD_DN = 7,
-  CMD_PASTE = 8,
+  CMD_MUTE = 2,
+  CMD_FULLS = 3,
+  CMD_RELOAD = 4,
+  CMD_SW_TABS = 5,
+  CMD_SW_WINDOWS = 6,
+  CMD_UP = 7,
+  CMD_DN = 8,
   CMD_ENTER = 9,
-  CMD_S1 = 10,
-  CMD_S2 = 11,
-  CMD_S3 = 12,
-  CMD_S4 = 13,
-  CMD_S5 = 14,
-  CMD_S6 = 15,
-  CMD_CLEAR = 16,
-  CMD_APPS = 17
+  CMD_PASTE = 10,
+  CMD_S1 = 11,
+  CMD_S2 = 12,
+  CMD_S3 = 13,
+  CMD_S4 = 14,
+  CMD_S5 = 15,
+  CMD_S6 = 16,
+  CMD_APPS = 17,
+  CMD_CLEAR = 18
 };
 
 enum Modes {
@@ -108,15 +109,16 @@ enum Modes {
   MAIN_CLOCK,
   MAIN_TEMP,
   MAIN_SOFF,
+  MAIN_SET_CLOCK,
   TRIGGERING_PC_1,
   TRIGGERING_PC_2,
   TRIGGERING_PC_3,
-  PC_TRIGGERED,
+  WAITING_FOR_PC,
   ON_MSG,
   OFF_MSG,
   SET_HOURS,
   SET_MINUTES,
-  SET_DISPLAY
+  MODE_MENU
 };
 
 String serialBuffer = "";
@@ -216,7 +218,7 @@ void refreshScreen() {
 }
 
 bool isOnMainScreen() {
-  return currentMode == currentDisplayMode || currentMode == PC_TRIGGERED;
+  return currentMode == currentDisplayMode || currentMode == WAITING_FOR_PC;
 }
 
 void switchMode(Modes mode) {
@@ -268,7 +270,7 @@ void switchMode(Modes mode) {
       displaySymbol(2, THREE_LINE);
       displaySymbol(3, THREE_LINE);
       break;
-    case PC_TRIGGERED:
+    case WAITING_FOR_PC:
       turnOffScreen();
       break;
     case ON_MSG:
@@ -295,7 +297,7 @@ void switchMode(Modes mode) {
       displayNumber(2, minutes / 10);
       displayNumber(3, minutes % 10);
       break;
-    case SET_DISPLAY:
+    case MODE_MENU:
       switch (currentDisplayMode) {
         case MAIN_CLOCK:
           displaySymbol(0, LETTER_T);
@@ -314,6 +316,12 @@ void switchMode(Modes mode) {
           displaySymbol(1, LETTER_O);
           displaySymbol(2, LETTER_F);
           displaySymbol(3, LETTER_F);
+          break;
+        case MAIN_SET_CLOCK:
+          displaySymbol(0, LETTER_S);
+          displaySymbol(1, LETTER_E);
+          displaySymbol(2, LETTER_T);
+          displaySymbol(3, LETTER_C);
           break;
         default:
           displaySymbol(0, DASH);
@@ -339,17 +347,17 @@ void autoSwitchMode() {
     case TRIGGERING_PC_3:
       timeout = 200;
       break;
-    case PC_TRIGGERED: timeout = pcIsOn ? 800 : 2200; break;
+    case WAITING_FOR_PC: timeout = pcIsOn ? 800 : 2200; break;
     case ON_MSG: timeout = 3000; break;
     case OFF_MSG: timeout = 3000; break;
-    case SET_HOURS: timeout = 10000; break;
-    case SET_MINUTES: timeout = 10000; break;
-    case SET_DISPLAY: timeout = 3000; break;
+    case SET_HOURS: timeout = 6000; break;
+    case SET_MINUTES: timeout = 6000; break;
+    case MODE_MENU: timeout = 3000; break;
   }
   if (timeout > 0 && millis() - lastModeSwitch >= timeout) {
     switch (currentMode) {
       case TRIGGERING_PC_1:
-        switchMode(reverseStartAnimation ? PC_TRIGGERED : TRIGGERING_PC_2);
+        switchMode(reverseStartAnimation ? WAITING_FOR_PC : TRIGGERING_PC_2);
         if(reverseStartAnimation) {
           pcTriggerReleaseTime = millis() + TRIGGER_INTERVAL;
           digitalWrite(pcTriggerPin, HIGH);
@@ -361,6 +369,17 @@ void autoSwitchMode() {
       case TRIGGERING_PC_3:
         reverseStartAnimation = true;
         switchMode(TRIGGERING_PC_2);
+        break;
+      case SET_HOURS:
+        switchMode(SET_MINUTES);
+        break;
+      case MODE_MENU:
+        if (currentDisplayMode == MAIN_SET_CLOCK) {
+          currentDisplayMode = MAIN_CLOCK;
+          switchMode(SET_HOURS);
+        } else {
+          switchMode(currentDisplayMode);
+        }
         break;
       default:
         switchMode(currentDisplayMode);
@@ -407,15 +426,29 @@ void monitorPcState() {
 }
 
 void readIrCodes() {
-  if (irRecv.decode(&results)) {
+  if(irRecv.decode(&results)) {
     if(lastCodeReceivedTime == 0) {
       bool codeIsCorrect = true;
       switch(results.value) {
-        case IR_01_INPUT: // clock setup
+        case IR_01_INPUT: // mode menu
           switch(currentMode) {
-            case SET_HOURS: switchMode(SET_MINUTES); break;
-            case SET_MINUTES: switchMode(currentDisplayMode); break;
-            default: switchMode(SET_HOURS);
+            case MODE_MENU:
+              switch(currentDisplayMode) {
+                case MAIN_CLOCK: currentDisplayMode = MAIN_TEMP; break;
+                case MAIN_TEMP: currentDisplayMode = MAIN_SOFF; break;
+                case MAIN_SOFF: currentDisplayMode = MAIN_SET_CLOCK; break;
+                default: currentDisplayMode = MAIN_CLOCK;
+              }
+              switchMode(MODE_MENU);
+              break;
+            case SET_HOURS:
+              switchMode(SET_MINUTES);
+              break;
+            case SET_MINUTES:
+              switchMode(currentDisplayMode);
+              break;
+            default:
+              switchMode(MODE_MENU);
           }
           break;
         case IR_02_POWER: // on/off the pc
@@ -427,15 +460,8 @@ void readIrCodes() {
         case IR_03_VERTICAL: // profile switch
           sendCommand(CMD_PROFILE);
           break;
-        case IR_04_CINEMA: // display modes
-          if(currentMode == SET_DISPLAY) {
-            switch(currentDisplayMode) {
-              case MAIN_CLOCK: currentDisplayMode = MAIN_TEMP; break;
-              case MAIN_TEMP: currentDisplayMode = MAIN_SOFF; break;
-              default: currentDisplayMode = MAIN_CLOCK;
-            }
-          }
-          switchMode(SET_DISPLAY);
+        case IR_04_CINEMA: // mute sound
+          sendCommand(CMD_MUTE);
           break;
         case IR_05_AUTOSOUND: // full screen
           sendCommand(CMD_FULLS);
@@ -443,11 +469,11 @@ void readIrCodes() {
         case IR_06_MUSIC: // reload view
           sendCommand(CMD_RELOAD);
           break;
-        case IR_07_VOICE: // mute sound
-          sendCommand(CMD_MUTE);
+        case IR_07_VOICE: // switch tabs
+          sendCommand(CMD_SW_TABS);
           break;
-        case IR_08_NIGHT: // play/pause track
-          sendCommand(CMD_PLAY);
+        case IR_08_NIGHT: // switch windows
+          sendCommand(CMD_SW_WINDOWS);
           break;
         case IR_09_VOLUP: // volume/value up
           onVolumeButtonsClick(1);
@@ -455,11 +481,11 @@ void readIrCodes() {
         case IR_10_VOLDN: // volume/value down
           onVolumeButtonsClick(-1);
           break;
-        case IR_11_BASS: // paste from clipboard
-          sendCommand(CMD_PASTE);
-          break;
-        case IR_12_MUTE: // enter/select
+        case IR_11_BASS: // enter/select
           sendCommand(CMD_ENTER);
+          break;
+        case IR_12_MUTE: // paste from clipboard
+          sendCommand(CMD_PASTE);
           break;
         case IR_13_INDICATORS: // slot 1
           sendCommand(CMD_S1);
@@ -479,11 +505,11 @@ void readIrCodes() {
         case IR_18_STANDARD: // slot 6
           sendCommand(CMD_S6);
           break;
-        case IR_19_AVSYNC: // clear text field
-          sendCommand(CMD_CLEAR);
-          break;
-        case IR_20_DTSDIALOG: // apps menu
+        case IR_19_AVSYNC: // apps menu
           sendCommand(CMD_APPS);
+          break;
+        case IR_20_DTSDIALOG: // clear text field
+          sendCommand(CMD_CLEAR);
           break;
         default:
           codeIsCorrect = false;

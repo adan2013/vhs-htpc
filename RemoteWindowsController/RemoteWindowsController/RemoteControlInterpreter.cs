@@ -32,19 +32,22 @@ namespace RemoteWindowsController
                 case "1": // profile
                     mainApp.switchActiveWindow(WindowType.Profiles);
                     break;
-                case "2": // full screen
-                    inputSim.Keyboard.KeyPress(VirtualKeyCode.F11);
-                    break;
-                case "3": // reload
-                    inputSim.Keyboard.KeyPress(VirtualKeyCode.F5);
-                    break;
-                case "4": // mute
+                case "2": // mute
                     inputSim.Keyboard.KeyPress(VirtualKeyCode.VOLUME_MUTE);
                     break;
-                case "5": // play
-                    inputSim.Keyboard.KeyPress(VirtualKeyCode.MEDIA_PLAY_PAUSE);
+                case "3": // full screen
+                    inputSim.Keyboard.KeyPress(VirtualKeyCode.F11);
                     break;
-                case "6": // volume up
+                case "4": // reload
+                    inputSim.Keyboard.KeyPress(VirtualKeyCode.F5);
+                    break;
+                case "5": // switch tabs
+                    inputSim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.TAB);
+                    break;
+                case "6": // switch windows
+                    inputSim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.LMENU, VirtualKeyCode.TAB);
+                    break;
+                case "7": // volume up
                     if (mainApp.windowsAreClosed())
                     {
                         inputSim.Keyboard.KeyPress(VirtualKeyCode.VOLUME_UP);
@@ -54,7 +57,7 @@ namespace RemoteWindowsController
                         mainApp.sendCommandToOpenWindow(WindowCommand.Up);
                     }
                     break;
-                case "7": // volume down
+                case "8": // volume down
                     if (mainApp.windowsAreClosed())
                     {
                         inputSim.Keyboard.KeyPress(VirtualKeyCode.VOLUME_DOWN);
@@ -63,9 +66,6 @@ namespace RemoteWindowsController
                     {
                         mainApp.sendCommandToOpenWindow(WindowCommand.Down);
                     }
-                    break;
-                case "8": // paste
-                    inputSim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_V);
                     break;
                 case "9": // enter
                     if (mainApp.windowsAreClosed())
@@ -77,30 +77,33 @@ namespace RemoteWindowsController
                         mainApp.sendCommandToOpenWindow(WindowCommand.Select);
                     }
                     break;
-                case "10": // slot 1
+                case "10": // paste
+                    inputSim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_V);
+                    break;
+                case "11": // slot 1
                     typeSlotValue(1);
                     break;
-                case "11": // slot 2
+                case "12": // slot 2
                     typeSlotValue(2);
                     break;
-                case "12": // slot 3
+                case "13": // slot 3
                     typeSlotValue(3);
                     break;
-                case "13": // slot 4
+                case "14": // slot 4
                     typeSlotValue(4);
                     break;
-                case "14": // slot 5
+                case "15": // slot 5
                     typeSlotValue(5);
                     break;
-                case "15": // slot 6
+                case "16": // slot 6
                     typeSlotValue(6);
-                    break;
-                case "16": // clear
-                    inputSim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_A);
-                    inputSim.Keyboard.KeyPress(VirtualKeyCode.DELETE);
                     break;
                 case "17": // apps
                     mainApp.switchActiveWindow(WindowType.Apps);
+                    break;
+                case "18": // clear
+                    inputSim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_A);
+                    inputSim.Keyboard.KeyPress(VirtualKeyCode.DELETE);
                     break;
                 default:
                     System.Diagnostics.Trace.WriteLine("Remote code not recognised: " + data);

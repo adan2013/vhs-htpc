@@ -1,6 +1,7 @@
 #include <IRrecv.h>
 #include <IRutils.h>
 #include <RTClib.h>
+#include <EEPROM.h>
 
 const int irPin = 2;
 const int dataPin = 14;
@@ -151,6 +152,29 @@ byte currentSymbols[] = {
   B00000000,
   B00000000
 };
+
+void readSettingsFromEeprom() {
+  unsigned int addr = 0;
+  EEPROM.get(addr, currentDisplayMode);
+  Serial.print("READ ");
+  Serial.println(currentDisplayMode);
+  switch (currentDisplayMode) {
+    case MAIN_CLOCK:
+    case MAIN_TEMP:
+    case MAIN_SOFF:
+      break;
+    default:
+      currentDisplayMode = MAIN_CLOCK;
+  }
+}
+
+void saveSettingsToEeprom() {
+  unsigned int addr = 0;
+  EEPROM.put(addr, currentDisplayMode);
+  EEPROM.commit();
+  Serial.print("WRITE ");
+  Serial.println(currentDisplayMode);
+}
 
 void displaySymbol(int pos, Symbols segments, bool dp = false) {
   if (pos >= 0 && pos < 4) {
@@ -341,7 +365,7 @@ void switchMode(Modes mode) {
 void autoSwitchMode() {
   int timeout = 0;
   switch (currentMode) {
-    case INIT_TEST: timeout = 2000; break;
+    case INIT_TEST: timeout = pcIsOn ? 1 : 2000; break;
     case TRIGGERING_PC_1:
     case TRIGGERING_PC_2:
     case TRIGGERING_PC_3:
@@ -380,6 +404,7 @@ void autoSwitchMode() {
         } else {
           switchMode(currentDisplayMode);
         }
+        saveSettingsToEeprom();
         break;
       default:
         switchMode(currentDisplayMode);
@@ -534,6 +559,7 @@ void updateTimeOnScreen() {
 }
 
 void setup() {
+  EEPROM.begin(8);
   Serial.begin(115200);
   while (!Serial) delay(50);
   while (!rtc.begin()) delay(50);
@@ -547,6 +573,8 @@ void setup() {
   pinMode(clockPin, OUTPUT);
   pinMode(pcTriggerPin, OUTPUT);
   Serial.println("System initialized");
+  readSettingsFromEeprom();
+  monitorPcState();
   switchMode(INIT_TEST);
   updateTimeOnScreen();
 }

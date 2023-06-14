@@ -14,7 +14,12 @@
         Foreground="#fff"
         ShowInTaskbar="False">
     <Grid>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Name="status">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40px" />
+        </Grid.RowDefinitions>
+        <Image Grid.Row="0" Source="pack://application:,,,/vhs-htpc.png" Margin="10 10 10 0" RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased" />
+        <TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Name="status">
             STATUS
         </TextBlock>
     </Grid>

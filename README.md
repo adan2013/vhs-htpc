@@ -1,4 +1,4 @@
-<img src="images/vhs_htpc_logo.png" alt="vhs htpc" width="250" />
+![vhs htpc logo](images/vhs_htpc_logo.png)
 
 # VHS HTPC Project
 

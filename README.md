@@ -1,6 +1,4 @@
-<div style="width: 200px; margin: 30px auto 10px;">
-<img src="images/vhs_htpc_logo.png" alt="vhs htpc" />
-</div>
+<img src="images/vhs_htpc_logo.png" alt="vhs htpc" width="250" />
 
 # VHS HTPC Project
 

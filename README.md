@@ -2,7 +2,7 @@
 
 # VHS HTPC Project
 
-This repository contains the source code of my DIY project called VHS HTPC. The device has been made from an old VHS player (Panasonic NV-J35HQ) and an old laptop (ASUS K75VJ). The device is controlled by a remote control from Sony's soundbar. The remote allows you to turn on/off the device and control the operating system. The device is also equipped with a 7-segment LCD screen that displays the current time, status of the PC and the current temperature of CPU.
+This repository contains the source code of my DIY project called VHS HTPC. The device is made from an old VHS player (Panasonic NV-J35HQ) and an old laptop (ASUS K75VJ). The device is controlled by a remote control from Sony's soundbar. The remote allows you to turn on/off the device and control the operating system. The device is also equipped with a 7-segment LCD screen that displays the current time, status of the PC and the current temperature of CPU.
 
 ## Features
 
@@ -16,7 +16,7 @@ This repository contains the source code of my DIY project called VHS HTPC. The 
 
 ## Article
 
-The article about this project is available on my blog. Currently only available in Polish:
+The article about this project is available on my blog. Currently only in Polish:
 
 [REDARKpl blog](https://redark.pl/vhs-htpc-project)
 
